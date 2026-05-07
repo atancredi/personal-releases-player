@@ -24,8 +24,8 @@ export interface IRadioDataDispatch {
     type: string,
     loadedRelease?: IRadioRelease
 }
-export const RadioContext = createContext<IRadioData>(null);
-export const RadioDispatchContext = createContext<ActionDispatch<[action: IRadioDataDispatch]>>(null);
+export const RadioContext = createContext<IRadioData>({ isPlaying: false });
+export const RadioDispatchContext = createContext<ActionDispatch<[action: IRadioDataDispatch]>>(()=>{});
 
 
 export type RadioDataReducer = (state: IRadioData, action: IRadioDataDispatch) => IRadioData;

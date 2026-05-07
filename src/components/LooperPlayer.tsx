@@ -22,8 +22,8 @@ export default function LooperPlayer({
 
 
     useEffect(() => {
-        if (radioApp.loadedRelease != undefined && 'mediaSession' in navigator) {
-            const artworkURL = new URL(radioApp.loadedRelease.cover, import.meta.env.VITE_S3_BUCKET_URL).href;
+        if (radioApp.loadedRelease?.cover != undefined && 'mediaSession' in navigator) {
+            const artworkURL = new URL(radioApp.loadedRelease.cover, import.meta.env.VITE_S3_BUCKET_URL).href
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: radioApp.loadedRelease.title,
                 artist: radioApp.loadedRelease.artist,
@@ -57,9 +57,9 @@ export default function LooperPlayer({
     return (
         <>
             {
-                radioApp.loadedRelease != undefined && (
+                radioApp.loadedRelease?.audio != undefined && (
                     <ReactHowler
-                        src={new URL(radioApp.loadedRelease.audio, import.meta.env.VITE_S3_BUCKET_URL).href}
+                        src={new URL(radioApp.loadedRelease?.audio, import.meta.env.VITE_S3_BUCKET_URL).href}
                         playing={radioApp.isPlaying}
                         html5={true}
 

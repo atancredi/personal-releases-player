@@ -28,13 +28,13 @@ export default function MiniPlayer({
     }
 
 
-    return radioApp.loadedRelease != undefined && (
+    return radioApp.loadedRelease?.cover != undefined && (
 
         <div className="h-[var(--mini-player-h)] bg-[var(--bg-surface)] fixed bottom-0 py-[var(--space-2)] border-t-1 border-black px-[var(--space-3)] w-full flex flex-row gap-[var(--space-2)] justify-between">
             <div className="">
                 <img
                     className={"h-full rounded-[var(--radius-sm)]"}
-                    src={new URL(radioApp.loadedRelease.cover, import.meta.env.VITE_S3_BUCKET_URL).href}
+                    src={new URL(radioApp.loadedRelease?.cover, import.meta.env.VITE_S3_BUCKET_URL).href}
                     alt={radioApp.loadedRelease.artist + " - " + radioApp.loadedRelease.title}
                 />
             </div>

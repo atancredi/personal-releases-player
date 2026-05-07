@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { RadioContext, RadioDispatchContext } from "./RadioApp/RadioApp";
+import { RadioContext, RadioDispatchContext, type IRadioRelease } from "./RadioApp/RadioApp";
 import LooperPlayer from "./LooperPlayer";
 import MiniPlayer from "./MiniPlayer";
 import { profileInfo, releases } from "../data";
@@ -18,7 +18,7 @@ const ReleasesGallery = ({
     const radioAppDispatch = useContext(RadioDispatchContext);
 
 
-    const handlePlayRelease = (release) => {
+    const handlePlayRelease = (release: IRadioRelease) => {
         // console.log("play release", release)
 
         if (radioApp.loadedRelease?.audio != release.audio) {
