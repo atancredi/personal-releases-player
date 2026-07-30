@@ -9,40 +9,7 @@ export interface IRadioReleasesListProps {
 export default function RadioReleasesList({
     releases
 }: Readonly<IRadioReleasesListProps>) {
-    const radioAppDispatch = useContext(RadioDispatchContext);
-    const radioClient = useContext(RadioClientContext);
-    const radioClientDispatch = useContext(RadioClientDispatchContext);
 
-    const handlePlayTrack = useCallback((track: ITrack, releaseFallback?: IRadioRelease) => {
-        // Use fallback if context hasn't updated yet due to React state batching
-        const activeRelease = releaseFallback ?? radioClient.openedRelease;
-
-        if (!activeRelease) return;
-
-        // Create a new track object instead of mutating the original one
-        const trackToPlay: ITrack = {
-            ...track,
-            audio: track.audio ?? activeRelease.audio
-        };
-
-        radioAppDispatch({
-            type: 'loadAndPlay',
-            loadedTrack: trackToPlay,
-            loadedRelease: activeRelease
-        });
-    }, [radioClient.openedRelease, radioAppDispatch]);
-
-    const handleOpenAndPlayRelease = useCallback((album: IRadioRelease) => {
-        radioClientDispatch({
-            type: "setOpenedRelease",
-            openedRelease: album
-        });
-
-        if (album.tracks && album.tracks.length > 0) {
-            // Pass 'album' explicitly because 'radioClient.openedRelease' will be stale here
-            handlePlayTrack(album.tracks[0], album);
-        }
-    }, [radioClientDispatch, handlePlayTrack]);
 
     const gallerySections = [
         { "name": "Latest" },
@@ -77,7 +44,6 @@ export default function RadioReleasesList({
                     <ReleaseCard
                         key={album.id + i}
                         album={album}
-                        handlePlayRelease={handleOpenAndPlayRelease}
                     />
                 ))}
             </div>
@@ -87,16 +53,49 @@ export default function RadioReleasesList({
 
 export interface ReleaseCardProps {
     album: IRadioRelease;
-    handlePlayRelease: (release: IRadioRelease) => void;
+    // handlePlayRelease: (release: IRadioRelease) => void;
 }
 
-const ReleaseCard = ({ album, handlePlayRelease }: Readonly<ReleaseCardProps>) => {
+const ReleaseCard = ({ album }: Readonly<ReleaseCardProps>) => {
     const albumCoverURL = album.cover ? new URL(album.cover, import.meta.env.VITE_S3_BUCKET_URL).href : undefined;
+
+    const radioAppDispatch = useContext(RadioDispatchContext);
+    const radioClient = useContext(RadioClientContext);
+    const radioClientDispatch = useContext(RadioClientDispatchContext);
+
+
+    const handleOpenAndPlayRelease = useCallback(() => {
+        radioClientDispatch({
+            type: "setOpenedRelease",
+            openedRelease: album
+        });
+
+        let t: ITrack;
+        if (album.tracks?.length) {
+            // Pass 'album' explicitly because 'radioClient.openedRelease' will be stale here
+            t = album.tracks[0]
+        } else {
+            t = {
+                id: "1",
+                title: album.title,
+                timestamp: 0
+            };
+        }
+
+        radioAppDispatch({
+            type: 'loadAndPlay',
+            loadedTrack: {
+                ...t,
+                audio: album.audio
+            },
+            loadedRelease: album
+        });
+    }, [radioClientDispatch, radioAppDispatch]);
 
     return (
         <div className="flex flex-row">
             <div className="w-[50%] aspect-square rounded-[var(--radius-md)] shadow-[var(--shadow-md)] bg-[var(--bg-card)] overflow-hidden border border-[var(--border-subtle)]">
-                <button onClick={() => handlePlayRelease(album)}>
+                <button onClick={() => handleOpenAndPlayRelease()}>
                     <img
                         src={albumCoverURL}
                         alt={album.title}
@@ -119,8 +118,8 @@ const ReleaseCard = ({ album, handlePlayRelease }: Readonly<ReleaseCardProps>) =
                     </div>
                 )}
                 <div className="text-[var(--text-secondary)] text-(--text-sm) font-light break-all position-end flex flex-row gap-(--space-1)">
-                    {album.tags?.map((v,i) => (
-                        <div key={v+i} className="px-[0.15rem] w-fit rounded-md border-1 border-(--text-secondary)">
+                    {album.tags?.map((v, i) => (
+                        <div key={v + i} className="px-[0.15rem] w-fit rounded-md border-1 border-(--text-secondary)">
                             {v}
                         </div>
                     ))}
