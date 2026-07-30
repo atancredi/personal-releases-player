@@ -60,7 +60,7 @@ const ReleaseCard = ({ album }: Readonly<ReleaseCardProps>) => {
     const albumCoverURL = album.cover ? new URL(album.cover, import.meta.env.VITE_S3_BUCKET_URL).href : undefined;
 
     const radioAppDispatch = useContext(RadioDispatchContext);
-    const radioClient = useContext(RadioClientContext);
+    // const radioClient = useContext(RadioClientContext);
     const radioClientDispatch = useContext(RadioClientDispatchContext);
 
 
