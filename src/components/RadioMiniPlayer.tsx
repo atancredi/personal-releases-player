@@ -124,7 +124,7 @@ export default function RadioMiniPlayer() {
 		const handlePointerMove = (e: any) => {
 			if (isDragging) {
 				// Update visually on drag
-				if (((e.offsetY) < -25) || ((e.offsetY - 24) > 25)) {
+				if (((e.offsetY) < -45) || ((e.offsetY - 24) > 45)) {
 					e.preventDefault();
 					setIsDragging(false);
 				} else {

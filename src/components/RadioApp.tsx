@@ -161,11 +161,11 @@ export default function RadioApp({
     // It was causing race conditions. We will use the `playing` prop below instead.
 
     useEffect(() => {
-        if (radio.loadedTrack?.cover != undefined && 'mediaSession' in navigator) {
-            const artworkURL = new URL(radio.loadedTrack.cover, storageBucketBaseURL).href;
+        if (radioClient.openedRelease?.cover != undefined && 'mediaSession' in navigator) {
+            const artworkURL = new URL(radioClient.openedRelease.cover, storageBucketBaseURL).href;
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: radio.loadedTrack.title,
-                artist: radio.loadedTrack.artist,
+                title: radioClient.openedRelease.title,
+                artist: radioClient.openedRelease.artist,
                 artwork: [
                     { src: artworkURL, sizes: '1250x1250', type: 'image/png' },
                 ]
@@ -175,7 +175,7 @@ export default function RadioApp({
             navigator.mediaSession.setActionHandler('pause', () => radioDispatch({ type: 'pause' }));
             navigator.mediaSession.setActionHandler('stop', () => radioDispatch({ type: 'stop' }));
         }
-    }, [radio.loadedTrack, storageBucketBaseURL]); // Added storageBucketBaseURL to dependencies
+    }, [radioClient.openedRelease, storageBucketBaseURL]); // Added storageBucketBaseURL to dependencies
 
     return (
         <RadioContext.Provider value={radio}>

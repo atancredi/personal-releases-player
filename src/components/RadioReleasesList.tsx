@@ -52,7 +52,7 @@ export default function RadioReleasesList({
 
 
     return (
-        <div className="bg-[rgb(208,208,208,0.6)] text-black w-full flex flex-col p-[var(--space-1)]">
+        <div className="bg-[rgb(208,208,208,0.7)] text-black w-full flex flex-col p-[var(--space-1)]">
             <div className="[font-size:var(--text-2xl)] leading-[var(--leading-normal)]">
                 {openedGallerySection}
             </div>
