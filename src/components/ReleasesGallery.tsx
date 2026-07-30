@@ -1,118 +1,125 @@
-import { useContext } from "react";
-import { RadioContext, RadioDispatchContext, type IRadioRelease } from "./RadioApp/RadioApp";
-import LooperPlayer from "./LooperPlayer";
-import MiniPlayer from "./MiniPlayer";
-import { profileInfo, releases } from "../data";
+// import { useCallback, useContext, useState } from "react";
+// import { releases, type IRadioRelease } from "../data";
+import { releases } from "../data";
 
 import './ReleasesGalleryTheme.css';
+// import {
+//     RadioClientContext,
+//     RadioClientDispatchContext,
+//     RadioContext,
+//     RadioDispatchContext,
+//     type ITrack
+// } from "./RadioApp";
+// import VolumeSlider from "./VolumeSlider";
+import RadioMiniPlayer from "./RadioMiniPlayer";
+import RadioReleasesList from "./RadioReleasesList";
+// import ScrollingText from "./ScrollingText/ScrollingText";
 
-export interface ReleasesGalleryProps {
-}
+export interface ReleasesGalleryProps { }
 
+const ReleasesGalleryV2 = (_props: Readonly<ReleasesGalleryProps>) => {
+    // Context Consumption
+    // const radioApp = useContext(RadioContext);
+    // const radioAppDispatch = useContext(RadioDispatchContext);
+    // const radioClient = useContext(RadioClientContext);
+    // const radioClientDispatch = useContext(RadioClientDispatchContext);
 
-const ReleasesGallery = ({
+    // const closeRelease = () => radioClientDispatch({
+    //     type: "setOpenedRelease",
+    //     openedRelease: undefined
+    // });
 
-}: Readonly<ReleasesGalleryProps>) => {
+    // const handlePlayTrack = useCallback((track: ITrack, releaseFallback?: IRadioRelease) => {
+    //     // Use fallback if context hasn't updated yet due to React state batching
+    //     const activeRelease = releaseFallback ?? radioClient.openedRelease;
 
-    const radioApp = useContext(RadioContext);
-    const radioAppDispatch = useContext(RadioDispatchContext);
+    //     if (!activeRelease) return;
 
+    //     // Create a new track object instead of mutating the original one
+    //     const trackToPlay: ITrack = {
+    //         ...track,
+    //         audio: track.audio ?? activeRelease.audio
+    //     };
 
-    const handlePlayRelease = (release: IRadioRelease) => {
-        // console.log("play release", release)
+    //     radioAppDispatch({
+    //         type: 'loadAndPlay',
+    //         loadedTrack: trackToPlay,
+    //         loadedRelease: activeRelease
+    //     });
+    // }, [radioClient.openedRelease, radioAppDispatch]);
 
-        if (radioApp.loadedRelease?.audio != release.audio) {
-            // console.log("dispatch loadAndPlay", release.audio)
-            radioAppDispatch({
-                type: 'loadAndPlay',
-                loadedRelease: release,
-            })
-        }
-
-    };
-
-    const profilePicURL = new URL(profileInfo.profilePicURL, import.meta.env.VITE_S3_BUCKET_URL).href;
 
     return (
         <>
             <div className="fixed inset-0 overflow-y-auto overscroll-none">
-                <div className="flex flex-col">
-
-                    <div className="relative mb-[var(--space-4)]">
-
-                        <div className="h-[60svh] ">
-                            <img className="h-full w-full object-cover" loading="eager" src={profilePicURL} alt={profileInfo.name} />
-                        </div>
-
-                        <div className="absolute bottom-0 text-white mix-blend-color-dodge [font-size:var(--text-2xl)] leading-[var(--leading-snug)] px-[var(--space-1)]">
-                            {profileInfo.name}
-                        </div>
-
+                {/* <div className="w-full sticky top-0 min-h-[86px] bg-black/20 backdrop-blur-md
+                    shadow transform-gpu will-change-transform flex flex-col px-[var(--space-1)]
+                ">
+                    <div className="flex flex-row justify-between my-[var(--space-1)]">
+                        <div>archive</div>
+                        <div>shop</div>
+                        <div>menu</div>
                     </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-[var(--space-3)] p-[var(--space-3)] mb-[var(--mini-player-h)]">
-                        {releases.map((album, i) => (
-                            <ReleasesGallery.Release key={album.id + i} album={album} handlePlayRelease={handlePlayRelease} />
-                        ))}
+                    <div className="m-auto mb-[var(--space-3)]">
+                        <img className="h-full" src={new URL("logos/logowhite.png", import.meta.env.VITE_S3_BUCKET_URL).href} />
                     </div>
-
+                    <div className="w-full">
+                        <ScrollingText>Latest Episode: Smoketto emememmememmemem</ScrollingText>
+                    </div>
+                </div> */}
+                {/* <div className="h-[var(--space-4)]"></div>
+                <div className="h-[var(--space-4)]"></div>
+                <div className="h-[var(--space-4)]"></div>
+                <div className="h-[var(--space-4)]"></div> */}
+                <div className="p-[var(--space-3)] mb-[var(--mini-player-h)]">
+                    <RadioReleasesList releases={releases}></RadioReleasesList>
                 </div>
-
-                {radioApp.loadedRelease != undefined && (<div className="h-[var(--mini-player-h)] my-[var(--space-2)]" ></div>)}
-
+                <div>
+                    <div>
+                        <img className="h-full" src={new URL("logos/logotransparentwhite.png", import.meta.env.VITE_S3_BUCKET_URL).href}></img>
+                    </div>
+                    <div className="flex flex-row justify-between px-(--space-2)">
+                        <div>obviouschoice radio</div>
+                        <div>2026, Rome, Italy</div>
+                    </div>
+                </div>
+                {/* <div className="h-[var(--mini-player-h)] my-[var(--space-2)]"></div> */}
+                <div className="h-[10rem]"></div>
             </div>
+            {/* {!radioClient.openedRelease ? (
+                
+            ) : (
+                <div className="fixed inset-0 overflow-y-auto overscroll-none">
+                    <div className="my-2">
+                        <button onClick={closeRelease}>close</button>
+                    </div>
+                    <div className="flex flex-col">
+                        <div className="flex flex-col">
+                            {radioClient.openedRelease.tracks?.map((track, i) => (
+                                <button onClick={() => handlePlayTrack(track)} key={track.id + i}>
+                                    <div className="my-1">
+                                        {track.title}
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
 
-            <LooperPlayer />
-            <MiniPlayer></MiniPlayer>
+                        <VolumeSlider />
 
+                        {radioApp.loadedTrack && (
+                            <div className="h-[var(--mini-player-h)] my-[var(--space-2)]"></div>
+                        )}
+                    </div>
+                </div>
+            )} */}
+
+
+
+            <RadioMiniPlayer />
         </>
-
     );
-}
+};
 
 
 
-
-export interface ReleaseProps {
-    album: any,
-    handlePlayRelease: (release: any) => void
-}
-ReleasesGallery.Release = ({
-    album,
-    handlePlayRelease
-}: Readonly<ReleaseProps>) => {
-
-    const albumCoverURL = new URL(album.cover, import.meta.env.VITE_S3_BUCKET_URL).href;
-
-
-    return (
-        <div className="flex flex-col gap-[var(--space-2)]">
-
-            <div className="w-full aspect-square rounded-[var(--radius-md)] shadow-[var(--shadow-md)] bg-[var(--bg-card)] overflow-hidden border border-[var(--border-subtle)]">
-                <button
-                    onClick={() => handlePlayRelease(album)}
-                >
-                    <img
-                        src={albumCoverURL}
-                        alt={album.title}
-                        className="w-full h-full object-cover"
-                        // className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                    />
-                </button>
-            </div>
-
-            <div className="px-1">
-                <h2 className="text-[var(--text-primary)] font-bold [font-size:var(--text-base)] leading-tight break-all">
-                    {album.title}
-                </h2>
-                <p className="text-[var(--text-secondary)] font-medium [font-size:var(--text-sm)] mt-1 break-all">
-                    {album.artist}
-                </p>
-            </div>
-
-        </div>
-    )
-}
-
-
-export default ReleasesGallery;
+export default ReleasesGalleryV2;
